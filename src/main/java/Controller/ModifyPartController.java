@@ -5,12 +5,10 @@ import Model.Inventory;
 import Model.Outsourced;
 import Model.Part;
 import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.Scene;
 import java.io.IOException;
 import java.net.URL;
@@ -50,7 +48,7 @@ public class ModifyPartController implements Initializable {
         partNameField.setText(partSelected.getName());
         partInvField.setText(String.valueOf(partSelected.getStock()));
         partCostField.setText(String.valueOf(partSelected.getPrice()));
-        partMinField.setText(String.valueOf(partSelected.getMax()));
+        partMinField.setText(String.valueOf(partSelected.getMin()));
         partMaxField.setText(String.valueOf(partSelected.getMax()));
     }
     public void mPartCancel(ActionEvent actionEvent) throws IOException {
@@ -90,7 +88,7 @@ public class ModifyPartController implements Initializable {
                         Inventory.addPart(newInHouse);
                         partAdded = true;
                     } catch (Exception e) {
-                        displayAlert(2);
+                        alertCases(2);
                     }
                 }
                 if (outsourcedRadio.isSelected()) {
@@ -109,38 +107,44 @@ public class ModifyPartController implements Initializable {
                     stage.show();
                 }
             }
+            if (min >= max || min <= 0) {
+                alertCases(3);
+            }
+            if (inv < min || inv > max) {
+                alertCases(4);
+            }
         } catch (Exception e) {
-            displayAlert(1);
+            alertCases(1);
         }
     }
 
-        private void displayAlert (int alertType) {
+        private void alertCases(int alertType) {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
 
             switch (alertType) {
                 case 1:
                     alert.setTitle("Error");
-                    alert.setHeaderText("Error Modifying Part");
-                    alert.setContentText("Form contains blank fields or invalid values.");
+                    alert.setHeaderText("Alert");
+                    alert.setContentText("There are blank fields and/or invalid values.");
                     alert.showAndWait();
                     break;
                 case 2:
                     alert.setTitle("Error");
-                    alert.setHeaderText("Invalid value for Machine ID");
-                    alert.setContentText("Machine ID may only contain numbers.");
+                    alert.setHeaderText("Alert");
+                    alert.setContentText("The Machine ID can only contain number.");
                     alert.showAndWait();
                     break;
                 case 3:
                     alert.setTitle("Error");
-                    alert.setHeaderText("Invalid value for Min");
-                    alert.setContentText("Min must be a number greater than 0 and less than Max.");
+                    alert.setHeaderText("Alert");
+                    alert.setContentText("Min should be greater than zero and less than Max.");
                     alert.showAndWait();
                     break;
                 case 4:
                     alert.setTitle("Error");
-                    alert.setHeaderText("Invalid value for Inventory");
-                    alert.setContentText("Inventory must be a number equal to or between Min and Max");
+                    alert.setHeaderText("Alert");
+                    alert.setContentText("Inventory must be equal to or between min and max.");
                     alert.showAndWait();
                     break;
             }
