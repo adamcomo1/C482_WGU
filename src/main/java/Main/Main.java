@@ -30,8 +30,8 @@ public class Main extends Application {
    private static void addTestData() {
 
         // Part Test Data Import
-        InHouse test1 = new InHouse(25, "test1", 125.15, 10, 1, 10, 23);
-        InHouse test2 = new InHouse(30, "test2", 20.00, 15, 1, 20, 23);
+        InHouse test1 = new InHouse(25, "test1", 125.15, 5, 1, 10, 23);
+        InHouse test2 = new InHouse(30, "test2", 20.00, 5, 1, 20, 23);
         Outsourced test3 = new Outsourced(31, "test3", 15.50, 3, 1, 25, "GE");
         Inventory.addPart(test1);
         Inventory.addPart(test2);

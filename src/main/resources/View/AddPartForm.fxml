@@ -11,31 +11,34 @@
             <Font name="Arial Black" size="12.0" />
          </font>
       </Label>
-      <RadioButton layoutX="249.0" layoutY="66.0" mnemonicParsing="false" selected="true" text="In-House">
+      <RadioButton fx:id="inHouseRadio" layoutX="249.0" layoutY="66.0" mnemonicParsing="false" onAction="#inHouseSelect" selected="true" text="In-House">
+         <font>
+            <Font name="Arial" size="10.0" />
+         </font>
+         <toggleGroup>
+            <ToggleGroup fx:id="partTypeToggle" />
+         </toggleGroup>
+      </RadioButton>
+      <RadioButton fx:id="outsourcedRadio" layoutX="345.0" layoutY="66.0" mnemonicParsing="false" onAction="#outsourcedSelect" text="Outsourced" toggleGroup="$partTypeToggle">
          <font>
             <Font name="Arial" size="10.0" />
          </font>
       </RadioButton>
-      <RadioButton layoutX="345.0" layoutY="66.0" mnemonicParsing="false" text="Outsourced">
-         <font>
-            <Font name="Arial" size="10.0" />
-         </font>
-      </RadioButton>
-      <TextField disable="true" editable="false" layoutX="175.0" layoutY="162.0" promptText="Auto Generated" />
-      <TextField layoutX="175.0" layoutY="204.0" />
-      <TextField layoutX="175.0" layoutY="246.0" />
-      <TextField layoutX="175.0" layoutY="287.0" />
-      <TextField layoutX="175.0" layoutY="328.0" />
-      <TextField layoutX="175.0" layoutY="370.0" />
-      <TextField layoutX="381.0" layoutY="328.0" />
-      <Label layoutX="94.0" layoutY="166.0" text="ID" />
-      <Label layoutX="94.0" layoutY="208.0" text="Name" />
-      <Label layoutX="94.0" layoutY="250.0" text="Inv" />
-      <Label layoutX="94.0" layoutY="291.0" text="Price/Cost" />
-      <Label layoutX="94.0" layoutY="332.0" text="Max" />
-      <Label layoutX="94.0" layoutY="374.0" text="Machine ID" />
-      <Label layoutX="339.0" layoutY="332.0" text="Min." />
-      <Button layoutX="325.0" layoutY="451.0" mnemonicParsing="false" text="Save" />
+      <TextField fx:id="partIdField" disable="true" editable="false" layoutX="175.0" layoutY="162.0" promptText="Auto Generated" />
+      <TextField fx:id="partNameField" layoutX="175.0" layoutY="204.0" />
+      <TextField fx:id="partInvField" layoutX="175.0" layoutY="246.0" />
+      <TextField fx:id="partCostField" layoutX="175.0" layoutY="287.0" />
+      <TextField fx:id="partMaxField" layoutX="175.0" layoutY="328.0" />
+      <TextField fx:id="partMachineCompany" layoutX="175.0" layoutY="370.0" />
+      <TextField fx:id="partMinField" layoutX="401.0" layoutY="328.0" />
+      <Label layoutX="87.0" layoutY="166.0" text="ID" />
+      <Label layoutX="75.0" layoutY="208.0" text="Name" />
+      <Label layoutX="84.0" layoutY="250.0" text="Inv" />
+      <Label layoutX="62.0" layoutY="291.0" text="Price/Cost" />
+      <Label layoutX="81.0" layoutY="332.0" text="Max" />
+      <Label fx:id="machineCustomerLabel" layoutX="65.0" layoutY="374.0" text="Machine ID" />
+      <Label layoutX="361.0" layoutY="332.0" text="Min." />
+      <Button layoutX="325.0" layoutY="451.0" mnemonicParsing="false" onAction="#saveButton" text="Save" />
       <Button layoutX="390.0" layoutY="451.0" mnemonicParsing="false" onAction="#cancelButton" text="Cancel" />
    </children>
 </AnchorPane>

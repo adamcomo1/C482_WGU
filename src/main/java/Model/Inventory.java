@@ -10,6 +10,20 @@ public class Inventory {
 
     private static ObservableList<Part> allParts = FXCollections.observableArrayList();
 
+    private static int partId = 0;
+
+    private static int productId = 0;
+
+    public static int newPartId() {
+        partId += 1;
+        return partId;
+    }
+
+    public static int newProductId() {
+        productId += 1;
+        return productId;
+    }
+
     public static void addPart(Part newPart) {
 
         allParts.add(newPart);
