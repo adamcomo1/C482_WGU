@@ -19,54 +19,101 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
-
-
-
+/**
+ * Controller class for the main screen used for control logic.
+ *
+ * @author Adam Comoletti
+ */
 public class MainController implements Initializable {
-
-    @FXML
+    /**
+     * Part ID column in Parts table.
+     */
     public TableColumn<Part, Integer> partIdCol;
-    @FXML
+    /**
+     * Part name column in Parts table.
+     */
     public TableColumn<Part, String> partNameCol;
-    @FXML
+    /**
+     * Part inventory / stock column in parts table.
+     */
     public TableColumn<Part, Integer> partInvCol;
-    @FXML
+    /**
+     * Part cost / price column in parts table.
+     */
     public TableColumn<Part, Double> partCostCol;
-    @FXML
+    /**
+     * Product ID column in Product table.
+     */
     public TableColumn<Product, Integer> productIdCol;
+    /**
+     * Product name column in Product table.
+     */
     public TableColumn<Product, String> productNameCol;
-    @FXML
+    /**
+     * Product inventory / stock column in product table.
+     */
     public TableColumn<Product, Integer> productInvCol;
-    @FXML
+    /**
+     * Product cost / price column in product table.
+     */
     public TableColumn<Product, Double> productCostCol;
-    @FXML
+    /**
+     * Product table view.
+     */
     public TableView<Product> mainProductTable;
-    @FXML
+    /**
+     * Part table view.
+     */
     public TableView<Part> mainPartTable;
+    /**
+     * Part search text field.
+     */
     public TextField partSearch;
-    public Button addPartButton;
+    /**
+     * Product search text field.
+     */
     public TextField productSearch;
 
+    /**
+     * Returns the part selected.
+     * @return A part object.
+     */
     public static Part getPartToModify() {
         return partToModify;
     }
 
+    /**
+     * Returns the product selected.
+     * @return A product object.
+     */
+    public static Product getProductToModify() {return productToModify;}
+
+    /**
+     * Part selected in the part table view.
+     */
     private static Part partToModify;
+    /**
+     * Product selected in the product table view
+     */
+    private static Product productToModify;
 
-
+    /**
+     * Initializes the controller and populates tables.
+     * @param url The url used to resolve paths for root, null if not known.
+     * @param resourceBundle Used to localize the root object, null if the root was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
-        // Generates product table view
         mainProductTable.setItems(Inventory.getAllProducts());
         productIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         productNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
         productInvCol.setCellValueFactory(new PropertyValueFactory<>("stock"));
         productCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
 
-        // Generates part table view
         mainPartTable.setItems(Inventory.getAllParts());
         partIdCol.setCellValueFactory(new PropertyValueFactory<>("id"));
         partNameCol.setCellValueFactory(new PropertyValueFactory<>("name"));
@@ -74,7 +121,11 @@ public class MainController implements Initializable {
         partCostCol.setCellValueFactory(new PropertyValueFactory<>("price"));
     }
 
-    // Switches to Add Part Form when the "Add" button is pressed
+    /**
+     * Loads AddPartController.
+     * @param actionEvent Add part button pressed action.
+     * @throws IOException From FXMLLoader.
+     */
     public void addPartClick(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/AddPartForm.fxml")));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -83,6 +134,11 @@ public class MainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Loads ModifyPartController.
+     * @param actionEvent Modify part button pressed action.
+     * @throws IOException From FXMLLoader.
+     */
     public void modifyPartButton(ActionEvent actionEvent) throws IOException {
         partToModify = mainPartTable.getSelectionModel().getSelectedItem();
         if (partToModify == null) {
@@ -97,6 +153,11 @@ public class MainController implements Initializable {
         }
     }
 
+    /**
+     * Loads AddProductController
+     * @param actionEvent Add product button pressed action.
+     * @throws IOException From FXMLLoader.
+     */
     public void addProductClick(ActionEvent actionEvent) throws IOException {
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/AddProductForm.fxml")));
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
@@ -105,15 +166,29 @@ public class MainController implements Initializable {
         stage.show();
     }
 
+    /**
+     * Loads ModifyProductController.
+     * @param actionEvent Modify product button pressed action.
+     * @throws IOException From FXMLLoader.
+     */
     public void modifyProduct(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/ModifyProductForm.fxml")));
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        productToModify = mainProductTable.getSelectionModel().getSelectedItem();
+        if (productToModify == null) {
+            alertCases(3);
+        } else {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/ModifyProductForm.fxml")));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
-    public void partSearchPress(KeyEvent keyEvent) {
+    /**
+     * Performs a search using the values entered into part search text field and displays them in parts table.
+     * @param actionEvent Part search button pressed action.
+     */
+    public void partSearchPress(ActionEvent actionEvent) {
 
         ObservableList<Part> allParts = Inventory.getAllParts();
         ObservableList<Part> partFound = FXCollections.observableArrayList();
@@ -124,11 +199,16 @@ public class MainController implements Initializable {
             }
         }
         mainPartTable.setItems(partFound);
-
+        if(partFound.size() == 0) {
+            alertCases(1);
+        }
     }
 
-
-    public void productSearchPress(KeyEvent keyEvent) {
+    /**
+     * Performs a search using the values entered into product search text field and displays them in product table.
+     * @param actionEvent Product search button pressed action.
+     */
+    public void productSearchPress(ActionEvent actionEvent) {
 
         ObservableList<Product> allProducts = Inventory.getAllProducts();
         ObservableList<Product> productFound = FXCollections.observableArrayList();
@@ -140,8 +220,15 @@ public class MainController implements Initializable {
             }
         }
         mainProductTable.setItems(productFound);
+        if(productFound.size() == 0) {
+            alertCases(2);
+        }
     }
 
+    /**
+     * Used to display different alert messages.
+     * @param alertType Alert cases selector.
+     */
     private void alertCases(int alertType) {
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -177,6 +264,86 @@ public class MainController implements Initializable {
                 alert.setContentText("Cannot remove product that has parts associated");
                 alert.showAndWait();
                 break;
+        }
+    }
+
+    /**
+     * Exits Program.
+     * @param actionEvent Exit button pressed action.
+     */
+    public void exitButton(ActionEvent actionEvent) {
+        System.exit(0);
+    }
+
+    /**
+     * Deletes selected part in part table.
+     * @param actionEvent Part delete button pressed action.
+     */
+    public void mainPartDelete(ActionEvent actionEvent) {
+        Part partSelected = mainPartTable.getSelectionModel().getSelectedItem();
+
+        if (partSelected == null) {
+            alertCases(4);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setContentText("Are you sure you wish to delete the selected part?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                Inventory.deletePart(partSelected);
+            }
+        }
+    }
+
+    /**
+     * Deletes selected product in product table.
+     * Displays confirmation before deleting product, displays error message if no product selected, and
+     * prevents deletion if product has associated parts.
+     * @param actionEvent Product delete button pressed action.
+     */
+    public void mainProductDelete(ActionEvent actionEvent) {
+        Product productSelected = mainProductTable.getSelectionModel().getSelectedItem();
+
+        if (productSelected == null) {
+            alertCases(3);
+        }
+        else {
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+            alert.setTitle("Delete Confirmation");
+            alert.setContentText("Are you sure you wish to delete the selected part?");
+            Optional<ButtonType> result = alert.showAndWait();
+
+            if (result.isPresent() && result.get() == ButtonType.OK) {
+                ObservableList<Part> partsAssociated = productSelected.getAllAssociatedParts();
+                if (partsAssociated.size() >= 1) {
+                    alertCases(5);
+                }
+                else {
+                    Inventory.deleteProduct(productSelected);
+                }
+            }
+        }
+    }
+
+    /**
+     * Displays all parts in table when part search text field is empty.
+     * @param keyEvent Part search text field pressed.
+     */
+    public void partSearchClear(KeyEvent keyEvent) {
+        if (partSearch.getText().isEmpty()) {
+            mainPartTable.setItems(Inventory.getAllParts());
+        }
+    }
+
+    /**
+     * Displays all products in table when product search text field is empty.
+     * @param keyEvent Product search text field press.
+     */
+    public void productSearchClear(KeyEvent keyEvent) {
+        if (productSearch.getText().isEmpty()) {
+            mainProductTable.setItems(Inventory.getAllProducts());
         }
     }
 }

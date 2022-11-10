@@ -13,35 +13,84 @@ import javafx.scene.Scene;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.ResourceBundle;
 import javafx.scene.Node;
 import javafx.stage.Stage;
 
-public class ModifyPartController implements Initializable {
+/**
+ * Controller class for the modify part screen used for control logic.
+ *
+ * @author Adam Comoletti
+ */
 
+public class ModifyPartController implements Initializable {
+    /**
+     * Radio button for the in-house parts.
+     */
     public RadioButton inHouseRadio;
+    /**
+     * Toggle group for toggling between in-house and outsourced.
+     */
     public ToggleGroup partTypeToggle;
+    /**
+     * Radio button for the outsourced parts.
+     */
     public RadioButton outsourcedRadio;
+    /**
+     * Text field for the part ID.
+     */
     public TextField partIdField;
+    /**
+     * Text field for the part name.
+     */
     public TextField partNameField;
+    /**
+     * Text field for the part inventory / stock.
+     */
     public TextField partInvField;
+    /**
+     * Text field for the part price / cost.
+     */
     public TextField partCostField;
+    /**
+     * Text field for the part inventory / stock max.
+     */
     public TextField partMaxField;
+    /**
+     * Text field for the part Machine ID or Customer Name.
+     */
     public TextField partMachineCustomer;
+    /**
+     * Text field for the part inventory / stock min.
+     */
     public TextField partMinField;
+    /**
+     * Label for the Customer Name or Machine ID.
+     */
     public Label machineCustomerLabel;
+    /**
+     * Declaration of part object selected in the MainController.
+     */
     private Part partSelected;
 
+    /**
+     * Initializes the controller and inserts data from the part selected into the text fields.
+     * @param url The url used to resolve paths for root, null if not known.
+     * @param resourceBundle Used to localize the root object, null if the root was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         partSelected = MainController.getPartToModify();
         if (partSelected instanceof InHouse) {
+            machineCustomerLabel.setText("Machine ID");
             inHouseRadio.setSelected(true);
-            partNameField.setText(String.valueOf(((InHouse) partSelected).getMachineId()));
+            partMachineCustomer.setText(String.valueOf(((InHouse) partSelected).getMachineId()));
         }
         if (partSelected instanceof Outsourced) {
+            machineCustomerLabel.setText("Company Name");
             outsourcedRadio.setSelected(true);
-            partNameField.setText(((Outsourced) partSelected).getCompanyName());
+            partMachineCustomer.setText(((Outsourced) partSelected).getCompanyName());
         }
 
         partIdField.setText(String.valueOf(partSelected.getId()));
@@ -51,23 +100,48 @@ public class ModifyPartController implements Initializable {
         partMinField.setText(String.valueOf(partSelected.getMin()));
         partMaxField.setText(String.valueOf(partSelected.getMax()));
     }
+
+    /**
+     * Delete button when pressed displays confirmation and loads MainController.
+     * @param actionEvent Cancel buttton action.
+     * @throws IOException From FXMLLoader.
+     */
     public void mPartCancel(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/MainForm.fxml")));
-        Stage stage = (Stage) ((Node)actionEvent.getSource()).getScene().getWindow();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();
+        Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+        alert.setTitle("Alert");
+        alert.setContentText("Are you sure you wish to cancel?");
+        Optional<ButtonType> result = alert.showAndWait();
+
+        if (result.isPresent() && result.get() == ButtonType.OK) {
+            Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/MainForm.fxml")));
+            Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+            Scene scene = new Scene(root);
+            stage.setScene(scene);
+            stage.show();
+        }
     }
 
-    public void inHouseSelect(ActionEvent actionEvent) {
-        machineCustomerLabel.setText("Machine ID");
+    /**
+     * Sets Company name / Machine ID label to "Machine ID".
+     * @param actionEvent In-house radio selected action.
+     */
+    public void inHouseSelect(ActionEvent actionEvent) { machineCustomerLabel.setText("Machine ID"); }
 
-    }
-
+    /**
+     * Sets Company name / Machine ID label to "Company Name".
+     * @param actionEvent Outsourced radio selected action.
+     */
     public void outsourcedSelect(ActionEvent actionEvent) {
         machineCustomerLabel.setText("Company Name");
     }
 
+    /**
+     * Saves changes to part and loads MainController.
+     *
+     * Input validation is performed with error messages displaying issue.
+     * @param actionEvent Save button press action.
+     * @throws IOException From FXMLLoader
+     */
     public void mPartSave(ActionEvent actionEvent) throws IOException {
         try {
             int id = partSelected.getId();
@@ -93,9 +167,14 @@ public class ModifyPartController implements Initializable {
                 }
                 if (outsourcedRadio.isSelected()) {
                     companyName = partMachineCustomer.getText();
-                    Outsourced newOutsourced = new Outsourced(id, name, cost, inv, min, max, companyName);
-                    Inventory.addPart(newOutsourced);
-                    partAdded = true;
+                    if (companyName.isBlank()) {
+                        alertCases(1);
+                    }
+                    else {
+                        Outsourced newOutsourced = new Outsourced(id, name, cost, inv, min, max, companyName);
+                        Inventory.addPart(newOutsourced);
+                        partAdded = true;
+                    }
                 }
                 if (partAdded) {
                     Inventory.deletePart(partSelected);
@@ -118,35 +197,39 @@ public class ModifyPartController implements Initializable {
         }
     }
 
-        private void alertCases(int alertType) {
+    /**
+     * Used to display different alert messages.
+     * @param alertType Alert cases selector.
+     */
+    private void alertCases(int alertType) {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
 
             switch (alertType) {
-                case 1:
+                case 1 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Alert");
                     alert.setContentText("There are blank fields and/or invalid values.");
                     alert.showAndWait();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Alert");
                     alert.setContentText("The Machine ID can only contain number.");
                     alert.showAndWait();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Alert");
                     alert.setContentText("Min should be greater than zero and less than Max.");
                     alert.showAndWait();
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Alert");
                     alert.setContentText("Inventory must be equal to or between min and max.");
                     alert.showAndWait();
-                    break;
+                }
             }
         }
 
