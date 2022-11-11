@@ -12,7 +12,11 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.Objects;
-
+/**
+ * Inventory management system application used to manage a companies inventory of products and parts.
+ * FUTURE ENHANCEMENT Add a total cost / price for parts associated with a product.
+ * @author Adam Comoletti
+ */
 public class Main extends Application {
     @Override
     public void start(Stage primaryStage) throws Exception{

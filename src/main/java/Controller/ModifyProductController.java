@@ -60,18 +60,56 @@ public class ModifyProductController implements Initializable {
      * Product selected in the MainController.
      */
     Product productSelected;
+    /**
+     * Part Cost / Price column in all parts table.
+     */
     public TableColumn<Part, Double> partCostColumn;
+    /**
+     * Part Inventory/Stock column in all parts table.
+     */
     public TableColumn<Part, Integer> partInvColumn;
+    /**
+     * Part Name column in all parts table.
+     */
     public TableColumn<Part, String> partNameColumn;
+    /**
+     * Part ID column in all parts table.
+     */
     public TableColumn<Part, Integer> partIdColumn;
+    /**
+     * All part tableview.
+     */
     public TableView<Part> allPartTable;
+    /**
+     * Text field for product inventory min.
+     */
     public TextField productMinField;
+    /**
+     * Text field for product inventory max.
+     */
     public TextField productMaxField;
+    /**
+     * Text field for product price / cost.
+     */
     public TextField productCostField;
+    /**
+     * Text field for the product inventory / stock.
+     */
     public TextField productInvField;
+    /**
+     * Text field for the product name.
+     */
     public TextField productNameField;
+    /**
+     * Text field for the product ID.
+     */
     public TextField productIdField;
 
+    /**
+     * Cancel button that displays cancel confirmation and loads main controller.
+     * @param actionEvent Cancel button press.
+     * @throws IOException From FXMLLoader.
+     */
     public void mproCancel(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Alert");
@@ -87,6 +125,12 @@ public class ModifyProductController implements Initializable {
         }
     }
 
+    /**
+     * ModifyProductController is initialized and text fields populate with the product selected.
+     * All parts table populates with all parts.
+     * @param url The url used to resolve paths for root, null if not known.
+     * @param resourceBundle Used to localize the root object, null if the root was not localized.
+     */
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         productSelected = MainController.getProductToModify();
@@ -113,6 +157,10 @@ public class ModifyProductController implements Initializable {
 
     }
 
+    /**
+     * Used to display different alert messages.
+     * @param alertType Alert cases selector.
+     */
     private void alertCases(int alertType) {
 
         Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -122,29 +170,29 @@ public class ModifyProductController implements Initializable {
             case 1 -> {
                 alert.setTitle("Error");
                 alert.setHeaderText("Error Adding Product");
-                alert.setContentText("Form contains blank fields and/or invalid values.");
+                alert.setContentText("There are blank fields and/or invalid values.");
                 alert.showAndWait();
             }
             case 2 -> {
                 alertInfo.setTitle("Alert");
-                alertInfo.setHeaderText("Part not found");
+                alertInfo.setHeaderText("No part found.");
                 alertInfo.showAndWait();
             }
             case 3 -> {
                 alert.setTitle("Error");
                 alert.setHeaderText("Min Invalid");
-                alert.setContentText("Min must be a number greater than 0 and less than Max.");
+                alert.setContentText("Min should be greater than zero and less than Max.");
                 alert.showAndWait();
             }
             case 4 -> {
                 alert.setTitle("Error");
                 alert.setHeaderText("Inventory Invalid");
-                alert.setContentText("Inventory must be a number equal to or between Min and Max");
+                alert.setContentText("Inventory must be equal to or between min and max.");
                 alert.showAndWait();
             }
             case 5 -> {
                 alert.setTitle("Error");
-                alert.setHeaderText("No part Selected. Please select a part to remove.");
+                alert.setHeaderText("Select a part to be removed / added.");
                 alert.showAndWait();
             }
             case 6 -> {
@@ -156,6 +204,11 @@ public class ModifyProductController implements Initializable {
         }
     }
 
+    /**
+     * Saves changes to part and loads MainController.
+     * Input validation is performed with error messages displaying issue.
+     * @param actionEvent Save button pressed.
+     */
     public void saveButtonPress(ActionEvent actionEvent) {
         try {
             int id = productSelected.getId();
@@ -197,6 +250,12 @@ public class ModifyProductController implements Initializable {
 
     }
 
+    /**
+     * Removes the selected associated part from the product's associated parts.
+     * Gives confirmation alert to confirm removal of part.
+     * Gives error message if no part is selected.
+     * @param actionEvent Remove button pressed.
+     */
     public void removeAssocPart(ActionEvent actionEvent) {
         Part partSelected = assocPartTable.getSelectionModel().getSelectedItem();
 
@@ -216,8 +275,17 @@ public class ModifyProductController implements Initializable {
         }
     }
 
+    /**
+     * Adds selected part to associated parts.
+     * RUNTIME ERROR occurs when no part is selected in the all parts table and the "add" button is pressed.
+     * This causes a null value to be used in the addAssocPart method and a runtime error occurs.
+     * A correction to this error can be seen commented in the addAssocPart method.
+     * @param actionEvent Add button pressed.
+     */
     public void addAssocPart(ActionEvent actionEvent) {
         Part partSelected = allPartTable.getSelectionModel().getSelectedItem();
+        // Example of corrected to prevent previously stated runtime error.
+        // If null value is passed and alert is displayed and explains the error.
         if (partSelected == null) {
             alertCases(5);
         }
@@ -227,6 +295,10 @@ public class ModifyProductController implements Initializable {
         }
     }
 
+    /**
+     * Performs a search using the values entered into part search text field and displays them in parts table.
+     * @param actionEvent Part search button pressed action.
+     */
     public void partSearchText(ActionEvent actionEvent) {
         ObservableList<Part> allParts = Inventory.getAllParts();
         ObservableList<Part> foundPart = FXCollections.observableArrayList();
@@ -243,6 +315,10 @@ public class ModifyProductController implements Initializable {
         }
     }
 
+    /**
+     * Displays all parts in table when part search text field is empty.
+     * @param keyEvent Part search text field pressed.
+     */
     public void partSearchClear(KeyEvent keyEvent) {
         if (partSearchField.getText().isEmpty()) {
             allPartTable.setItems(Inventory.getAllParts());

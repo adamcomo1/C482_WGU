@@ -3,37 +3,74 @@ package Controller;
 import Model.InHouse;
 import Model.Inventory;
 import Model.Outsourced;
-import Model.Part;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.*;
 import javafx.scene.Scene;
 import java.io.IOException;
-import java.net.URL;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.ResourceBundle;
 
 import javafx.scene.Node;
 import javafx.stage.Stage;
-
+/**
+ * Controller class for the add part screen used for control logic.
+ *
+ * @author Adam Comoletti
+ */
 public class AddPartController {
+    /**
+     * Radio button for the in-house parts.
+     */
     public RadioButton inHouseRadio;
+    /**
+     * Radio button for outsourced parts.
+     */
     public RadioButton outsourcedRadio;
+    /**
+     * Text field for the part ID.
+     */
     public TextField partIdField;
+    /**
+     * Text field for part name.
+     */
     public TextField partNameField;
+    /**
+     * Text field for part inventory / stock.
+     */
     public TextField partInvField;
+    /**
+     * Text field for part price / cost.
+     */
     public TextField partCostField;
+    /**
+     * Text field for part inventory max.
+     */
     public TextField partMaxField;
+    /**
+     * Text field for Machine ID or Company name.
+     */
     public TextField partMachineCompany;
+    /**
+     * Text field for part inventory min.
+     */
     public TextField partMinField;
-    public Label machineCustomerLabel;
+    /**
+     * Label for Machine ID or Company name.
+     */
+    public Label machineCompanyLabel;
+    /**
+     * Toggle group for toggling between in-house and outsourced.
+     */
     public ToggleGroup partTypeToggle;
 
 
-
-
+    /**
+     * Delete button when pressed displays confirmation and loads MainController.
+     * @param actionEvent Cancel button action.
+     * @throws IOException From FXMLLoader.
+     */
     public void cancelButton(ActionEvent actionEvent) throws IOException {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle("Alert");
@@ -48,7 +85,13 @@ public class AddPartController {
             stage.show();
         }
     }
-
+    /**
+     * Saves changes to part and loads MainController.
+     *
+     * Input validation is performed with error messages displaying issue.
+     * @param actionEvent Save button press action.
+     * @throws IOException From FXMLLoader
+     */
     public void saveButton(ActionEvent actionEvent) throws IOException {
         try {
             int id = 0;
@@ -102,55 +145,61 @@ public class AddPartController {
             alertCases(5);
         }
     }
-
-
-
-
+        /**
+        * Sets Company name / Machine ID label to "Machine ID".
+        * @param actionEvent In-house radio selected action.
+        */
         public void inHouseSelect (ActionEvent actionEvent){
-            machineCustomerLabel.setText("Machine ID");
+            machineCompanyLabel.setText("Machine ID");
 
         }
-
+        /**
+        * Sets Company name / Machine ID label to "Company Name".
+        * @param actionEvent Outsourced radio selected action.
+        */
         public void outsourcedSelect (ActionEvent actionEvent){
-            machineCustomerLabel.setText("Company Name");
+            machineCompanyLabel.setText("Company Name");
 
         }
-
+        /**
+        * Used to display different alert messages.
+        * @param alertType Alert cases selector.
+        */
         private void alertCases (int alertType) {
 
             Alert alert = new Alert(Alert.AlertType.ERROR);
 
             switch (alertType) {
-                case 1:
+                case 1 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Invalid Part Name");
                     alert.setContentText("Name cannot be empty.");
                     alert.showAndWait();
-                    break;
-                case 2:
+                }
+                case 2 -> {
                     alert.setTitle("Error");
                     alert.setHeaderText("Invalid Inventory value");
                     alert.setContentText("Inventory must be an integer equal to or between Min and Max.");
                     alert.showAndWait();
-                    break;
-                case 3:
+                }
+                case 3 -> {
                     alert.setTitle("Error");
-                    alert.setHeaderText("Invalid value for Min");
+                    alert.setHeaderText("Error");
                     alert.setContentText("Min must be an integer greater than zero and less than Max.");
                     alert.showAndWait();
-                    break;
-                case 4:
+                }
+                case 4 -> {
                     alert.setTitle("Error");
-                    alert.setHeaderText("Invalid Machine ID");
+                    alert.setHeaderText("Alert");
                     alert.setContentText("Machine ID can only contain numbers.");
                     alert.showAndWait();
-                    break;
-                case 5:
+                }
+                case 5 -> {
                     alert.setTitle("Error");
-                    alert.setHeaderText("Error Adding Part");
+                    alert.setHeaderText("Alert");
                     alert.setContentText("Form contains blank fields and/or invalid values.");
                     alert.showAndWait();
-                    break;
+                }
             }
         }
     }

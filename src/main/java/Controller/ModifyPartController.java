@@ -66,9 +66,9 @@ public class ModifyPartController implements Initializable {
      */
     public TextField partMinField;
     /**
-     * Label for the Customer Name or Machine ID.
+     * Label for the Company Name or Machine ID.
      */
-    public Label machineCustomerLabel;
+    public Label machineCompanyLabel;
     /**
      * Declaration of part object selected in the MainController.
      */
@@ -83,12 +83,12 @@ public class ModifyPartController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         partSelected = MainController.getPartToModify();
         if (partSelected instanceof InHouse) {
-            machineCustomerLabel.setText("Machine ID");
+            machineCompanyLabel.setText("Machine ID");
             inHouseRadio.setSelected(true);
             partMachineCustomer.setText(String.valueOf(((InHouse) partSelected).getMachineId()));
         }
         if (partSelected instanceof Outsourced) {
-            machineCustomerLabel.setText("Company Name");
+            machineCompanyLabel.setText("Company Name");
             outsourcedRadio.setSelected(true);
             partMachineCustomer.setText(((Outsourced) partSelected).getCompanyName());
         }
@@ -103,7 +103,7 @@ public class ModifyPartController implements Initializable {
 
     /**
      * Delete button when pressed displays confirmation and loads MainController.
-     * @param actionEvent Cancel buttton action.
+     * @param actionEvent Cancel button action.
      * @throws IOException From FXMLLoader.
      */
     public void mPartCancel(ActionEvent actionEvent) throws IOException {
@@ -125,14 +125,14 @@ public class ModifyPartController implements Initializable {
      * Sets Company name / Machine ID label to "Machine ID".
      * @param actionEvent In-house radio selected action.
      */
-    public void inHouseSelect(ActionEvent actionEvent) { machineCustomerLabel.setText("Machine ID"); }
+    public void inHouseSelect(ActionEvent actionEvent) { machineCompanyLabel.setText("Machine ID"); }
 
     /**
      * Sets Company name / Machine ID label to "Company Name".
      * @param actionEvent Outsourced radio selected action.
      */
     public void outsourcedSelect(ActionEvent actionEvent) {
-        machineCustomerLabel.setText("Company Name");
+        machineCompanyLabel.setText("Company Name");
     }
 
     /**

@@ -7,12 +7,31 @@ package Model; /**
  * @author Adam Comoletti
  */
 public abstract class Part {
+    /**
+     * Part Id.
+     */
     private int id;
+    /**
+     * Part name.
+     */
     private String name;
+    /**
+     * Part price / cost.
+     */
     private double price;
+    /**
+     * Part stock / inventory.
+     */
     private int stock;
+    /**
+     * Part stock / inventory min.
+     */
     private int min;
-    private int max;    
+    /**
+     * Part stock / inventory max.
+     */
+    private int max;
+
     public Part(int id, String name, double price, int stock, int min, int max) {
         this.id = id;
         this.name = name;

@@ -36,7 +36,7 @@
       <Label layoutX="94.0" layoutY="250.0" text="Inv" />
       <Label layoutX="71.0" layoutY="291.0" text="Price/Cost" />
       <Label layoutX="91.0" layoutY="332.0" text="Max" />
-      <Label fx:id="machineCustomerLabel" layoutX="68.0" layoutY="374.0" text="Machine ID" />
+      <Label fx:id="machineCompanyLabel" layoutX="68.0" layoutY="374.0" text="Machine ID" />
       <Label layoutX="361.0" layoutY="332.0" text="Min." />
       <Button layoutX="325.0" layoutY="451.0" mnemonicParsing="false" onAction="#mPartSave" text="Save" />
       <Button layoutX="390.0" layoutY="451.0" mnemonicParsing="false" onAction="#mPartCancel" text="Cancel" />
