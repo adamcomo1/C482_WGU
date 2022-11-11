@@ -18,6 +18,12 @@ import java.util.Objects;
  * @author Adam Comoletti
  */
 public class Main extends Application {
+    /**
+     * Method that creates and loads the main screen.
+     *
+     * @param primaryStage The main stage of the application.
+     * @throws Exception
+     */
     @Override
     public void start(Stage primaryStage) throws Exception{
         Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/View/MainForm.fxml")));
@@ -30,10 +36,11 @@ public class Main extends Application {
 
 
     }
-    // Function for adding test data to program for testing
-   private static void addTestData() {
 
-        // Part Test Data Import
+    /**
+     * Method used to add test data to application.
+     */
+   private static void addTestData() {
         InHouse test1 = new InHouse(25, "test1", 125.15, 5, 1, 10, 23);
         InHouse test2 = new InHouse(30, "test2", 20.00, 5, 1, 20, 23);
         Outsourced test3 = new Outsourced(31, "test3", 15.50, 3, 1, 25, "GE");
@@ -47,6 +54,10 @@ public class Main extends Application {
         Inventory.addProduct(test4);
     }
 
+    /**
+     * Method that loads test data and launches appliation.
+     * @param args
+     */
     public static void main(String[] args) {
         // Importing test data function
         addTestData();

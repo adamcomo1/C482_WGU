@@ -1,4 +1,5 @@
 module kinkead.firstscreen {
+
     requires javafx.controls;
     requires javafx.fxml;
 
@@ -9,4 +10,5 @@ module kinkead.firstscreen {
     opens Controller to javafx.fxml;
 
     opens Model to javafx.base;
+    exports Model;
 }
