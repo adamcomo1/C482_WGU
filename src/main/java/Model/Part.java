@@ -6,7 +6,7 @@ package Model; /**
  */
 public abstract class Part {
     /**
-     * Part Id.
+     * Part ID.
      */
     private int id;
     /**
